@@ -1,0 +1,19 @@
+{
+  "name": "cypress-dashboard-light-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "mongodb": "^3.3.5"
+  },
+  "scripts": {
+    "start": "ts-node-dev --transpileOnly index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^12.12.14",
+    "fastify": "^2.10.0",
+    "mongodb-memory-server": "^6.0.2",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.7.3"
+  }
+}
