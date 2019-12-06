@@ -7,7 +7,7 @@ import "./App.css";
 
 const ContentContainer = styled("div")({
   backgroundColor: colors.soap200,
-  height: "100%"
+  overflowY: "scroll"
 });
 const App: React.FC = () => {
   return (

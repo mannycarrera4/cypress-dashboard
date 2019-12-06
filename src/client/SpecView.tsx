@@ -5,6 +5,7 @@ import { spacing, H4 } from "@workday/canvas-kit-react-core";
 import Card from "@workday/canvas-kit-react-card";
 import Tabs from "./Tabs";
 import SpecList from "./SpecList";
+import FailList from "./FailList";
 import { extLinkIcon } from "@workday/canvas-system-icons-web";
 import { SystemIcon } from "@workday/canvas-kit-react-icon";
 
@@ -45,8 +46,6 @@ import { Run } from "../server/types";
 const Container = styled("div")({
   margin: "0 10%",
   paddingTop: 30,
-  maxHeight: "60%",
-  overflowY: "auto",
   textAlign: "left"
 });
 
@@ -82,7 +81,7 @@ const SpecView: React.FC<{ id: string }> = ({ id }) => {
           text: "Failures",
           passed: true,
           content: () =>
-            run ? <SpecList data={run} filter={r => !r.passed} /> : null
+            run ? <FailList data={run} filter={r => !r.passed} /> : null
         }
       ]
     }
