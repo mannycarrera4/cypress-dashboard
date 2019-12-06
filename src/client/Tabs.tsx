@@ -53,11 +53,11 @@ const TabText = styled('div')<Pick<TabProps, 'isActive'>>(
   }
 )
 
-const SpecRow = styled('div')({
-  display: 'flex',
-  borderBottom: `1px solid ${colors.soap400}`,
-  padding: 15
-})
+// const SpecRow = styled('div')({
+//   display: 'flex',
+//   borderBottom: `1px solid ${colors.soap400}`,
+//   padding: 15
+// })
 
 class Tab extends React.Component<TabProps, {}> {
   public render() {
@@ -102,11 +102,11 @@ class Tabs extends React.Component<TabsProps, TabsState> {
         <TabsContainer>
           {tabs}
         </TabsContainer>
-        <SpecRow>
+        <div>
           {total
             .find((tab: any) => tab.id === this.state.selectedTabId)
             .content()}
-        </SpecRow>
+        </div>
       </div>
     )
   }

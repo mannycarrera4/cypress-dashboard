@@ -14,7 +14,7 @@ export interface HeaderProps {
 const HeaderContainer = styled('div')({
   backgroundImage:
     'linear-gradient(to right bottom, rgb(8, 117, 225), rgb(0, 92, 185));',
-  height: 300,
+  height: 282,
   textAlign: 'left'
 })
 
