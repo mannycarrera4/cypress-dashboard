@@ -23,7 +23,8 @@ export interface TabsProps {
 
 const TabsContainer = styled('div')({
   display: 'flex',
-  borderBottom: '1px solid #ced3d9'
+  borderBottom: '1px solid #ced3d9',
+  paddingLeft: '20px'
 })
 
 const TabText = styled('div')<Pick<TabProps, 'isActive'>>(
@@ -52,18 +53,11 @@ const TabText = styled('div')<Pick<TabProps, 'isActive'>>(
   }
 )
 
-const data = {
-  points: {
-    total: [
-      {id: 1, name: 'tab-1', text: 'Spec'},
-      {id: 2, name: 'tab-2', text: 'Failures'}
-    ]
-  }
-}
-
-const isActiveTab = {
-  backgroundColor: 'orange'
-}
+const SpecRow = styled('div')({
+  display: 'flex',
+  borderBottom: `1px solid ${colors.soap400}`,
+  padding: 15
+})
 
 class Tab extends React.Component<TabProps, {}> {
   public render() {
@@ -93,7 +87,6 @@ class Tabs extends React.Component<TabsProps, TabsState> {
   public render() {
     var total = this.props.data.points.total,
       tabs = total.map((el: any, i: any) => {
-        // console.warn(el.text)
         return (
           <Tab
             key={i}
@@ -105,9 +98,16 @@ class Tabs extends React.Component<TabsProps, TabsState> {
       })
 
     return (
-      <TabsContainer>
-        {tabs}
-      </TabsContainer>
+      <div>
+        <TabsContainer>
+          {tabs}
+        </TabsContainer>
+        <SpecRow>
+          {total
+            .find((tab: any) => tab.id === this.state.selectedTabId)
+            .content()}
+        </SpecRow>
+      </div>
     )
   }
 }
