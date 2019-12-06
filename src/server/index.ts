@@ -1,35 +1,45 @@
 import build from "fastify";
+import fastifyStatic from "fastify-static";
 
 const specTimeout = 1000;
 
-const fastify = build({ logger: true });
+const fastify = build({ logger: true, maxParamLength: 1000 });
 
 import * as Api from "./types";
 import * as db from "./api";
 
-fastify.get("/", async () => {
+fastify.register(fastifyStatic, {
+  root: "/" // shouldn't be root of whole file system
+});
+
+fastify.get("/assets/:asset", (req, res) => {
+  (res as any).sendFile(req.params.asset);
+});
+
+fastify.get("/api/", async () => {
   return db.getState();
 });
 
-fastify.get("/projects", async req => {
+fastify.get("/api/projects", async req => {
   return db.getProjects();
 });
 
-fastify.post("/projects", async req => {
+fastify.post("/api/projects", async req => {
   return db.createProject(req.body);
 });
 
-fastify.get("/projects/:projectId", async req => {
+fastify.get("/api/projects/:projectId", async req => {
   return db.getProject({ id: req.params.projectId });
 });
 
-fastify.get("/projects/:projectId/runs/:runId", async req => {
+fastify.get("/api/projects/:projectId/runs/:runId", async (req, res) => {
   const project = await db.getProject({ id: req.params.projectId });
-  return db.getRun({ id: req.params.runId }, project);
+  const run = await db.getRun({ id: req.params.runId }, project);
+  return run || res.code(404).send("null");
 });
 
 fastify.post(
-  "/projects/:projectId/runs",
+  "/api/projects/:projectId/runs",
   async (req: Api.CreateRunRequest): Promise<Api.CreateRunResponse> => {
     const { projectId } = req.params;
     const { id, specs, machineId } = req.body;
@@ -66,33 +76,18 @@ fastify.post(
 );
 
 fastify.post(
-  "/projects/:projectId/runs/:id/specs",
-  async (req: Api.UpdateRunSpecRequest): Promise<Api.UpdateRunSpecResponse> => {
-    const { spec, machineId } = req.body;
+  "/api/projects/:projectId/runs/:id/specs",
+  async (req: Api.UpdateRunSpecRequest) => {
+    const { spec, machineId, result } = req.body;
     const { id, projectId } = req.params;
-    const project = await db.getProject({ id: projectId });
-    const run = await db.getRun({ id }, project);
-    if (run) {
-      const running = run.specs.running.find(s => s.name === spec);
-      if (running) {
-        run.specs.running = run.specs.running.filter(s => s.name !== spec);
-        run.results.push({
-          name: spec,
-          started: running.started,
-          stopped: +new Date(),
-          machineId,
-          passed: true,
-          pending: false
-        });
-      }
-    }
-    return {};
+
+    return db.updateRunResult({ id, projectId, machineId, spec, result });
   }
 );
 
 const start = async () => {
   await fastify
-    .listen(3001)
+    .listen(3001, "0.0.0.0")
     .then(address => {
       console.log("Server listening on ", address);
     })

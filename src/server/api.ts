@@ -99,6 +99,41 @@ export async function claimSpec(
   return project;
 }
 
+export async function updateRunResult({
+  id,
+  projectId,
+  machineId,
+  spec,
+  result
+}: {
+  id: string;
+  projectId: string;
+  machineId: string;
+  spec: string;
+  result: API.Result;
+}) {
+  const project = await getProject({ id: projectId });
+  const run = await getRun({ id }, project);
+  if (run) {
+    const running = run.specs.running.find(s => s.name === spec);
+    if (running) {
+      run.specs.running = run.specs.running.filter(s => s.name !== spec);
+      run.results.push({
+        name: spec,
+        started: running.started,
+        stopped: +new Date(),
+        machineId,
+        passed: result.stats.failures === 0,
+        result
+      });
+    }
+  }
+
+  await writeDB();
+
+  return run;
+}
+
 export async function isDone(
   { id }: { id: string },
   project: API.Project
