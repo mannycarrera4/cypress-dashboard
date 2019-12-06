@@ -20,6 +20,6 @@
     "jsx": "react"
   },
   "include": [
-    "src"
+    "src/client", "src/client/index.tsx"
   ]
 }
