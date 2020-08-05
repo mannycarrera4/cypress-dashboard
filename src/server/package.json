@@ -4,7 +4,7 @@
   "main": "index.ts",
   "license": "MIT",
   "dependencies": {
-    "fastify": "^2.10.0",
+    "fastify": "^2.15.1",
     "fastify-static": "^2.5.1"
   },
   "scripts": {
